@@ -66,7 +66,7 @@ fn handle_cli() -> Result<(String, String)> {
             let mut prompt = String::new();
             stdin().read_line(&mut prompt).unwrap();
             println!("");
-            prompt
+            prompt.trim_end().to_string()
         }
     };        
 
@@ -96,7 +96,7 @@ async fn ask_ai_a_question(prompt: &str, model_name: &str) -> Result<String> {
 async fn main() -> Result<()> {
     let (openai_api_key, prompt) = handle_cli()?;
 
-    println!("Question: {}", prompt);
+    println!("Question: {}\n", prompt);
 
     openai::set_key(openai_api_key);
     let answer = ask_ai_a_question(&prompt, MODEL_NAME).await?;
