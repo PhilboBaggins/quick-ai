@@ -5,6 +5,7 @@ use openai::completions::Completion;
 
 const APP_NAME: &str = env!("CARGO_PKG_NAME");
 const KEYRING_ENTRY: &str = "OPENAI_KEY";
+const MODEL_NAME: &str = "text-davinci-003";
 
 fn handle_cli() -> Result<(String, String)> {
     let matches = command!()
@@ -65,10 +66,10 @@ fn handle_cli() -> Result<(String, String)> {
     Ok((openai_api_key, prompt))
 }
 
-async fn ask_ai_a_question(prompt: String) -> Result<String> {
+async fn ask_ai_a_question(prompt: &str, model_name: &str) -> Result<String> {
     let prompt = format!("{} -- short concise answer", prompt);
 
-    let completion = Completion::builder("text-davinci-003")
+    let completion = Completion::builder(model_name)
         .prompt(&prompt)
         .max_tokens(1024)
         .create()
@@ -91,7 +92,7 @@ async fn main() -> Result<()> {
     println!("Question: {}", prompt);
 
     openai::set_key(openai_api_key);
-    let answer = ask_ai_a_question(prompt).await?;
+    let answer = ask_ai_a_question(&prompt, MODEL_NAME).await?;
 
     println!("Answer: {}", answer);
 
