@@ -1,3 +1,4 @@
+use std::io::stdin;
 use clap::{arg, command};
 use itertools::Itertools;
 use keyring::{Entry, Result};
@@ -57,11 +58,17 @@ fn handle_cli() -> Result<(String, String)> {
         std::process::exit(0);
     }
 
-    let prompt = matches
-        .get_many::<String>("prompt")
-        .unwrap()
-        .map(|s| s.as_str())
-        .join(" ");
+    // Get prompt from CLI or stdin
+    let prompt = match matches.get_many::<String>("prompt") {
+        Some(prompts) => prompts.map(|s| s.as_str()).join(" "),
+        None => {
+            println!("Please enter a prompt to send to the AI.");
+            let mut prompt = String::new();
+            stdin().read_line(&mut prompt).unwrap();
+            println!("");
+            prompt
+        }
+    };        
 
     Ok((openai_api_key, prompt))
 }
