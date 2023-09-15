@@ -1,5 +1,5 @@
 [package]
-name = "quick-gpt"
+name = "quick-ai"
 version = "0.1.0"
 edition = "2021"
 description = "A CLI for getting quick answers to simple questions from OpenAI's API"
